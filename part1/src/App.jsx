@@ -1,20 +1,15 @@
-import PropTypes from "prop-types";
+const Hello = ({ name, age }) => {
+  const bornYear = () => new Date().getFullYear() - age;
 
-const Hello = (props) => {
-  console.log(props);
   return (
     <div>
       <p>
-        Hello {props.name}, you are {props.age} years old
+        Hello {name}, you are {age} years old
       </p>
+      <p>So you were probably born in {bornYear()}</p>
     </div>
   );
 };
-
-/* Hello.propTypes = {
-  name: PropTypes.string,
-  age: PropTypes.number,
-}; */
 
 const App = () => {
   const name = "Peter";
