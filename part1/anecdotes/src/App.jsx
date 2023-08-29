@@ -5,11 +5,14 @@ const randomIntFromInterval = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
-const getHighestAnecdote = (arrayOfAndecdotes) => {
-  return arrayOfAndecdotes.reduce((actual, currentValue) => {
-    return actual.votes > currentValue.votes ? actual : currentValue;
-  }, arrayOfAndecdotes[0]);
-};
+const getHighestAnecdote = (arrayOfAndecdotes) =>
+  arrayOfAndecdotes.reduce(
+    (highestVotedOne, currentValue) =>
+      highestVotedOne.votes > currentValue.votes
+        ? highestVotedOne
+        : currentValue,
+    arrayOfAndecdotes[0]
+  );
 
 const originalAnecdotes = [
   { text: "If it hurts, do it more often.", votes: 0 },
