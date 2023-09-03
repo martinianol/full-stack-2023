@@ -3,12 +3,14 @@ import Total from "./Total";
 
 const Content = ({ parts }) => {
   return (
-    <div>
-      {parts.map((part) => (
-        <Part key={part.name} part={part} />
-      ))}
+    <>
       <Total parts={parts} />
-    </div>
+      <ul>
+        {parts.map((part) => (
+          <Part key={part.name} part={part} />
+        ))}
+      </ul>
+    </>
   );
 };
 

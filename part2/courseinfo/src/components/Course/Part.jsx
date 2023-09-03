@@ -1,8 +1,8 @@
 const Part = ({ part }) => {
   return (
-    <p>
+    <li>
       {part.name} {part.exercises}
-    </p>
+    </li>
   );
 };
 
