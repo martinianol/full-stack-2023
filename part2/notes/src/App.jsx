@@ -9,7 +9,7 @@ const App = () => {
 
   const getNotes = () => {
     console.log("Inside useEffect");
-    axios.get("http://localhost:3001/notes").then((response) => {
+    axios.get("http://localhost:3002/notes").then((response) => {
       console.log("promise fulfilled");
       setNotes(response.data);
     });
@@ -28,8 +28,14 @@ const App = () => {
       id: notes.length + 1,
     };
 
-    setNotes(notes.concat(noteObject));
-    setNewNote("");
+    axios
+    .post('http://localhost:3002/notes', noteObject)
+    .then(response => {
+      console.log(response)
+      setNotes(notes.concat(response.data))
+      setNewNote("");
+    })
+
   };
 
   const handleNoteChange = (event) => {
