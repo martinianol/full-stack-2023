@@ -12,6 +12,13 @@ const App = () => {
     event.preventDefault();
     const nameToSave = newName.trim();
 
+    const nameExists = persons.some((person) => person.name === nameToSave);
+
+    if (nameExists) {
+      window.alert(`${nameToSave} is already added to phonebook`);
+      return;
+    }
+
     if (nameToSave !== "") {
       const newPerson = {
         name: nameToSave,
