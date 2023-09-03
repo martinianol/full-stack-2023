@@ -24,6 +24,16 @@
       "content": "Would this update?",
       "important": false,
       "id": 5
+    },
+    {
+      "content": "Making a new note",
+      "important": true,
+      "id": 6
+    },
+    {
+      "content": "Another new note",
+      "important": false,
+      "id": 7
     }
   ]
 }

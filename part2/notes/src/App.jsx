@@ -1,55 +1,45 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import Note from "./Note";
-const NOTES_URL = "http://localhost:3002/notes";
+import noteService from "./services/notes";
+
 const App = () => {
   const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState("");
   const [showAll, setShowAll] = useState(true);
 
   const getNotes = () => {
-    console.log("Inside useEffect");
-    axios.get(NOTES_URL).then((response) => {
-      console.log("promise fulfilled");
-      setNotes(response.data);
+    noteService.getAll().then((initialNotes) => {
+      setNotes(initialNotes);
     });
   };
 
   useEffect(getNotes, []);
 
-  console.log("render", notes.length, "notes");
-
   const addNote = (event) => {
     event.preventDefault();
-    console.log("button clicked", event.target);
     const noteObject = {
       content: newNote,
       important: Math.random() < 0.5,
       id: notes.length + 1,
     };
 
-    axios.post(NOTES_URL, noteObject).then((response) => {
-      console.log(response);
-      setNotes(notes.concat(response.data));
+    noteService.create(noteObject).then((returnedNote) => {
+      setNotes(notes.concat(returnedNote));
       setNewNote("");
     });
   };
 
-  const handleNoteChange = (event) => {
-    console.log(event.target.value);
-    setNewNote(event.target.value);
-  };
+  const handleNoteChange = (event) => setNewNote(event.target.value);
 
   const toggleImportanceOf = (id) => {
-    console.log(`importance of ${id} needs to be toggled`);
-    const NOTE_URL = NOTES_URL + "/" + id;
     const note = notes.find((note) => note.id === id);
     const changedNote = { ...note, important: !note.important };
 
-    axios.put(NOTE_URL, changedNote).then((response) => {
-      console.log(response);
-      setNotes(notes.map((note) => (note.id !== id ? note : response.data)));
-    });
+    noteService
+      .update(id, changedNote)
+      .then((returnedNote) =>
+        setNotes(notes.map((note) => (note.id !== id ? note : returnedNote)))
+      );
   };
 
   const notesToShow = showAll ? notes : notes.filter((note) => note.important);
