@@ -32,24 +32,48 @@ const App = () => {
     const nameToSave = newName.trim();
     const numberToSave = newNumber.trim();
 
-    const nameExists = persons.some((person) => person.name === nameToSave);
+    const personExists = persons.find((person) => person.name === nameToSave);
+    const personExistsIndex = persons.findIndex(
+      (person) => person.name === nameToSave
+    );
 
-    if (nameExists) {
-      window.alert(`${nameToSave} is already added to phonebook`);
-      return;
-    }
+    if (personExists) {
+      const confirmToProceed = window.confirm(
+        `${nameToSave} is already added to phonebook, replace the old number with the new one?`
+      );
+      if (confirmToProceed) {
+        const personToEdit = { ...personExists, number: numberToSave };
 
-    if (nameToSave !== "") {
-      const newPerson = {
-        name: nameToSave,
-        number: numberToSave,
-      };
+        personsService
+          .updatePerson(personToEdit.id, personToEdit)
+          .then((updatedPerson) => {
+            const updatedPersons = persons.toSpliced(
+              personExistsIndex,
+              1,
+              updatedPerson
+            );
+            setPersons(updatedPersons);
+            setNewName("");
+            setNewNumber("");
+          });
 
-      personsService.create(newPerson).then((returnedPerson) => {
-        setPersons(persons.concat(returnedPerson));
-        setNewName("");
-        setNewNumber("");
-      });
+        return;
+      } else {
+        return;
+      }
+    } else {
+      if (nameToSave !== "") {
+        const newPerson = {
+          name: nameToSave,
+          number: numberToSave,
+        };
+
+        personsService.create(newPerson).then((returnedPerson) => {
+          setPersons(persons.concat(returnedPerson));
+          setNewName("");
+          setNewNumber("");
+        });
+      }
     }
   };
 
