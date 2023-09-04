@@ -50,9 +50,13 @@ const App = () => {
         number: numberToSave,
       };
 
-      setPersons(persons.concat(newPerson));
-      setNewName("");
-      setNewNumber("");
+      axios.post(SERVER_ADDRESS, newPerson).then((response) => {
+        const returnedPerson = response.data;
+        console.log(response.data);
+        setPersons(persons.concat(returnedPerson));
+        setNewName("");
+        setNewNumber("");
+      });
     }
   };
 
