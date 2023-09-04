@@ -2,9 +2,7 @@ import { useState, useEffect } from "react";
 import Filter from "./components/FIlter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
-import axios from "axios";
-
-const SERVER_ADDRESS = "http://localhost:3001/persons";
+import personsService from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -13,10 +11,7 @@ const App = () => {
   const [filteredName, setFilteredName] = useState("");
 
   const getPersons = () => {
-    axios.get(SERVER_ADDRESS).then((response) => {
-      response.data;
-      setPersons(response.data);
-    });
+    personsService.getAll().then((personsData) => setPersons(personsData));
   };
 
   useEffect(getPersons, []);
@@ -50,12 +45,19 @@ const App = () => {
         number: numberToSave,
       };
 
-      axios.post(SERVER_ADDRESS, newPerson).then((response) => {
-        const returnedPerson = response.data;
-        console.log(response.data);
+      personsService.create(newPerson).then((returnedPerson) => {
         setPersons(persons.concat(returnedPerson));
         setNewName("");
         setNewNumber("");
+      });
+    }
+  };
+
+  const handleDeletePerson = (id) => {
+    const personToDelete = persons.find((person) => person.id === id);
+    if (window.confirm(`Delete ${personToDelete.name} ?`)) {
+      personsService.deletePerson(id).then(() => {
+        setPersons(persons.filter((person) => person.id !== id));
       });
     }
   };
@@ -82,7 +84,7 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-      <Persons persons={personsToShow} />
+      <Persons persons={personsToShow} handleDelete={handleDeletePerson} />
     </div>
   );
 };
