@@ -11,6 +11,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [filteredName, setFilteredName] = useState("");
   const [notificationMessage, setNotificationMessage] = useState(null);
+  const [isError, setIsError] = useState(false);
 
   const getPersons = () => {
     personsService.getAll().then((personsData) => setPersons(personsData));
@@ -81,19 +82,30 @@ const App = () => {
     }
   };
 
-  const addNotification = (message) => {
+  const addNotification = (message, isError) => {
     setNotificationMessage(message);
+    setIsError(isError);
     setTimeout(() => {
       setNotificationMessage(null);
+      setIsError(false);
     }, 5000);
   };
 
   const handleDeletePerson = (id) => {
     const personToDelete = persons.find((person) => person.id === id);
     if (window.confirm(`Delete ${personToDelete.name} ?`)) {
-      personsService.deletePerson(id).then(() => {
-        setPersons(persons.filter((person) => person.id !== id));
-      });
+      personsService
+        .deletePerson(id)
+        .then(() => {
+          setPersons(persons.filter((person) => person.id !== id));
+        })
+        .catch((error) => {
+          console.error(error);
+          addNotification(
+            `Information of ${personToDelete.name} has already been removed from server`,
+            true
+          );
+        });
     }
   };
 
@@ -107,7 +119,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={notificationMessage} />
+      <Notification message={notificationMessage} isError={isError}/>
       <Filter filterValue={filteredName} handleChange={handleFilterChange} />
 
       <h2>Add a new Person</h2>
