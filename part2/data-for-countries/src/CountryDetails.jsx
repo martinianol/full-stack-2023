@@ -1,4 +1,4 @@
-const Country = ({ country }) => {
+const CountryDetails = ({ country }) => {
   if (!country) return null;
   return (
     <div>
@@ -15,4 +15,4 @@ const Country = ({ country }) => {
   );
 };
 
-export default Country;
+export default CountryDetails;

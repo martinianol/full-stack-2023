@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import Country from "./Country";
+import Countries from "./Countries";
+import CountryDetails from "./CountryDetails";
 import axios from "axios";
 
 const baseUrl = "https://studies.cs.helsinki.fi/restcountries/";
@@ -47,17 +48,22 @@ function App() {
     }
   }, [countries]);
 
+  const handleSelectCountry = (name) => {
+    console.log(name)
+    console.log(countries.find((country) => country.name.common === name))
+    setCountries([countries.find((country) => country.name.common === name)]);
+  };
+
   const contentToDisplay =
     countries.length > 10 ? (
       <p>Too many matches, please be more specific</p>
     ) : countries.length > 1 ? (
-      <ul>
-        {countries.map((country) => (
-          <li key={country.cca2}>{country.name.common}</li>
-        ))}
-      </ul>
+      <Countries
+        countries={countries}
+        handleSelectCountry={handleSelectCountry}
+      />
     ) : (
-      <Country country={country} />
+      <CountryDetails country={country} />
     );
 
   console.log(countries.length);
