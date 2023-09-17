@@ -1,7 +1,9 @@
 const express = require("express");
 const morgan = require("morgan");
-const app = express();
+const cors = require("cors");
 require("dotenv").config();
+
+const app = express();
 const Person = require("./models/person");
 
 let persons = [
@@ -28,18 +30,14 @@ let persons = [
 ];
 
 app.use(express.json());
+app.use(cors());
+
 morgan.token("bodyData", (req, res) => JSON.stringify(req.body));
 app.use(
   morgan(
     ":method :url :status :res[content-length] :response-time ms :bodyData"
   )
 );
-
-const generateId = () => {
-  const maxId =
-    persons.length > 0 ? Math.max(...persons.map((person) => person.id)) : 0;
-  return maxId + 1;
-};
 
 app.get("/api/info", (req, res) => {
   const date = new Date();
@@ -88,21 +86,21 @@ app.post("/api/persons", (req, res) => {
     });
   }
 
-  const nameExists = persons.find((person) => person.name === name);
+  /* const nameExists = persons.find((person) => person.name === name);
   if (nameExists) {
     return res.status(400).json({
       error: `Person ${name} already exists`,
     });
-  }
+  } */
 
-  const newPerson = {
-    id: generateId(),
+  const newPerson = new Person({
     name,
     number,
-  };
+  });
 
-  persons = persons.concat(newPerson);
-  res.json(newPerson);
+  newPerson.save().then((person) => {
+    res.json(newPerson);
+  });
 });
 
 const PORT = process.env.PORT;
