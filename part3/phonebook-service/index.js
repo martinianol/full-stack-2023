@@ -67,15 +67,17 @@ app.get("/api/persons/:id", (req, res) => {
   });
 });
 
-app.delete("/api/persons/:id", (req, res) => {
-  const id = Number(req.params.id);
-  const idx = persons.findIndex((person) => person.id === id);
-  if (idx !== -1) {
-    persons.splice(idx, 1);
-    res.status(204).send();
-  } else {
-    res.status(404).send("Person not found in db");
-  }
+app.delete("/api/persons/:id", (req, res, next) => {
+  const id = req.params.id;
+  Person.findByIdAndRemove(id)
+    .then((result) => {
+      if (result) {
+        res.status(204).send();
+      } else {
+        res.status(404).send();
+      }
+    })
+    .catch((error) => next(error));
 });
 
 app.post("/api/persons", (req, res) => {
