@@ -1,6 +1,8 @@
 const express = require("express");
 const morgan = require("morgan");
 const app = express();
+require("dotenv").config();
+const Person = require("./models/person");
 
 let persons = [
   {
@@ -26,8 +28,12 @@ let persons = [
 ];
 
 app.use(express.json());
-morgan.token("bodyData", (req, res) => JSON.stringify(req.body))
-app.use(morgan(":method :url :status :res[content-length] :response-time ms :bodyData"));
+morgan.token("bodyData", (req, res) => JSON.stringify(req.body));
+app.use(
+  morgan(
+    ":method :url :status :res[content-length] :response-time ms :bodyData"
+  )
+);
 
 const generateId = () => {
   const maxId =
@@ -37,24 +43,30 @@ const generateId = () => {
 
 app.get("/api/info", (req, res) => {
   const date = new Date();
-  res.send(`
-    <p>Phonebook has info for ${persons.length} people</p>
-    <p>${date}</p>
-  `);
+  Person.countDocuments({}).then((numberOfPerons) => {
+    res.send(`
+      <p>Phonebook has info for ${numberOfPerons} people</p>
+      <p>${date}</p>
+    `);
+  });
 });
 
 app.get("/api/persons", (req, res) => {
-  res.json(persons);
+  Person.find({}).then((persons) => {
+    res.json(persons);
+  });
 });
 
 app.get("/api/persons/:id", (req, res) => {
-  const id = Number(req.params.id);
-  const person = persons.find((person) => person.id === id);
-  if (person) {
-    res.json(person);
-  } else {
-    res.status(404).send("Person not found in db");
-  }
+  const id = req.params.id;
+
+  Person.findById(id).then((person) => {
+    if (person) {
+      res.json(person);
+    } else {
+      res.status(404).send("Person not found in db");
+    }
+  });
 });
 
 app.delete("/api/persons/:id", (req, res) => {
@@ -93,6 +105,7 @@ app.post("/api/persons", (req, res) => {
   res.json(newPerson);
 });
 
-const PORT = 3001;
-app.listen(PORT);
-console.log(`Server running on port ${PORT}`);
+const PORT = process.env.PORT;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
