@@ -72,12 +72,21 @@ const App = () => {
           number: numberToSave,
         };
 
-        personsService.create(newPerson).then((returnedPerson) => {
-          setPersons(persons.concat(returnedPerson));
-          addNotification(`Added ${returnedPerson.name}`);
-          setNewName("");
-          setNewNumber("");
-        });
+        personsService
+          .create(newPerson)
+          .then((returnedPerson) => {
+            setPersons(persons.concat(returnedPerson));
+            addNotification(`Added ${returnedPerson.name}`);
+            setNewName("");
+            setNewNumber("");
+          })
+          .catch((error) => {
+            console.log(error);
+            addNotification(
+              `Error: ${error.response.data.error}`,
+              true
+            );
+          });
       }
     }
   };
@@ -119,7 +128,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={notificationMessage} isError={isError}/>
+      <Notification message={notificationMessage} isError={isError} />
       <Filter filterValue={filteredName} handleChange={handleFilterChange} />
 
       <h2>Add a new Person</h2>
