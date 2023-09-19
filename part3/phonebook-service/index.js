@@ -9,7 +9,7 @@ const Person = require("./models/person");
 app.use(express.json());
 app.use(cors());
 
-morgan.token("bodyData", (req, res) => JSON.stringify(req.body));
+morgan.token("bodyData", (req) => JSON.stringify(req.body));
 app.use(
   morgan(
     ":method :url :status :res[content-length] :response-time ms :bodyData"

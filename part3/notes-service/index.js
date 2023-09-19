@@ -3,7 +3,6 @@ require("dotenv").config();
 const app = express();
 const cors = require("cors");
 const Note = require("./models/note");
-const { error } = require("console");
 
 const requestLogger = (request, response, next) => {
   console.log("Method:", request.method);

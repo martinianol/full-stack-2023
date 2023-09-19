@@ -21,3 +21,5 @@ let notes = [
     important: false,
   },
 ];
+
+module.exports(notes);

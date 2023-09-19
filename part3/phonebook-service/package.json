@@ -11,6 +11,7 @@
   "author": "Mars",
   "license": "ISC",
   "devDependencies": {
+    "eslint": "^8.49.0",
     "nodemon": "^3.0.1"
   },
   "dependencies": {
