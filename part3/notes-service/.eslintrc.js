@@ -8,6 +8,9 @@ module.exports = {
   overrides: [
     {
       env: {
+        "jest/globals": true,
+        commonjs: true,
+        es2021: true,
         node: true,
       },
       files: [".eslintrc.{js,cjs}"],
