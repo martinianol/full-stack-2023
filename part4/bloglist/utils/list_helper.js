@@ -36,9 +36,29 @@ const mostBlogs = (blogs) => {
   return topAuthor;
 };
 
+const mostLikes = (blogs) => {
+  if (blogs.length === 0) {
+    return "Blog list is empty";
+  }
+
+  const topLikesAuthor = chain(blogs)
+    .groupBy("author")
+    .map((group, author) => {
+      return {
+        author: author,
+        likes: group.reduce((acc, cur) => acc + cur.likes, 0),
+      };
+    })
+    .maxBy("likes")
+    .value();
+  console.log(topLikesAuthor);
+  return topLikesAuthor;
+};
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
   mostBlogs,
+  mostLikes,
 };
