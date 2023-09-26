@@ -12,9 +12,11 @@ const listWithOneBlog = [
 ];
 
 const listWithMoreBlogs = [
+  { author: "Fran", likes: 0 },
   { author: "Mars", likes: 10 },
-  { author: "Mars2", likes: 15 },
-  { author: "Mars3", likes: 20 },
+  { author: "Juan", likes: 15 },
+  { author: "Pedro", likes: 20 },
+  { author: "Mars", likes: 10 },
 ];
 
 test("dummy returns one", () => {
@@ -42,14 +44,22 @@ describe("total likes", () => {
   test("of a bigger list is calculated right", () => {
     const result = listHelper.totalLikes(listWithMoreBlogs);
 
-    expect(result).toBe(45);
+    expect(result).toBe(55);
   });
+});
 
-  describe("favorite Blog", () => {
-    test("it should return the blog with highest likes", () => {
-      const result = listHelper.favoriteBlog(listWithMoreBlogs);
+describe("favorite Blog", () => {
+  test("it should return the blog with highest likes", () => {
+    const result = listHelper.favoriteBlog(listWithMoreBlogs);
 
-      expect(result).toEqual({ author: "Mars3", likes: 20 });
-    });
+    expect(result).toEqual({ author: "Pedro", likes: 20 });
+  });
+});
+
+describe("most Blog", () => {
+  test("it should return an object with the author with most blogs and its quantity", () => {
+    const result = listHelper.mostBlogs(listWithMoreBlogs);
+
+    expect(result).toEqual({ author: "Mars", blogs: 2 });
   });
 });
