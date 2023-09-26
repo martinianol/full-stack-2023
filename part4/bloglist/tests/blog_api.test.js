@@ -35,7 +35,15 @@ beforeEach(async () => {
 test("all blogs are returned", async () => {
   const response = await api.get("/api/blogs");
 
-  expect(response.body).toHaveLength(2);
+  expect(response.body).toHaveLength(3);
+});
+
+test("verifies that the unique identifier property of the blog posts is named id", async () => {
+  const response = await api.get("/api/blogs");
+  const returnedBlogs = response.body;
+  returnedBlogs.forEach((blog) => {
+    expect(blog).toHaveProperty("id");
+  });
 });
 
 afterAll(async () => {
