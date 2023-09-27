@@ -54,7 +54,7 @@ test("verifies an HTTP POST request successfully creates a new blog post", async
     likes: 0,
   };
 
-  await api.post("/api/blogs").send(blogContent)
+  await api.post("/api/blogs").send(blogContent);
 
   const response = await api.get("/api/blogs");
 
@@ -71,11 +71,32 @@ test("verifies that if the likes property is missing, it will default to the val
     url: "www.newblog.com",
   };
 
-  const createdBlog = await api.post("/api/blogs").send(blogContent)
+  const createdBlog = await api.post("/api/blogs").send(blogContent);
 
-  expect(createdBlog.body.likes).toBe(0)
+  expect(createdBlog.body.likes).toBe(0);
+});
 
-})
+test("verifies that if the title property is missing, the backend responds with status code 400.", async () => {
+  const blogWithMissingContent = {
+    author: "Mars",
+    url: "www.newblog.com",
+    likes: 5,
+  };
+
+  const response = await api.post("/api/blogs").send(blogWithMissingContent);
+  expect(response.statusCode).toBe(400)
+});
+
+test("verifies that if the url property is missing, the backend responds with status code 400.", async () => {
+  const blogWithMissingContent = {
+    author: "Mars",
+    title: "The url is missing",
+    likes: 5,
+  };
+
+  const response = await api.post("/api/blogs").send(blogWithMissingContent);
+  expect(response.statusCode).toBe(400)
+});
 
 afterAll(async () => {
   await mongoose.connection.close();
