@@ -26,15 +26,17 @@ const initialBlogs = [
 ];
 
 const nonExistingId = async () => {
-  const blog = new Blog({ title: "This is will be removed",
-  author: "Mars",
-  url: "www.seondblog.com",
-  likes: 5 })
-  await blog.save()
-  await blog.deleteOne()
+  const blog = new Blog({
+    title: "This is will be removed",
+    author: "Mars",
+    url: "www.seondblog.com",
+    likes: 5,
+  });
+  await blog.save();
+  await blog.deleteOne();
 
-  return blog._id.toString()
-}
+  return blog._id.toString();
+};
 
 beforeEach(async () => {
   await Blog.deleteMany({});
@@ -111,14 +113,29 @@ test("verifies that if the url property is missing, the backend responds with st
 
 describe("deletion of a blog", () => {
   test("succeeds with status code 204 if id is valid", async () => {
-    const notesAtStart = await Blog.find({})
-    const notesToDelete =notesAtStart[0]
-    await api.delete(`/api/blogs/${notesToDelete.id}`).expect(204);
+    const notesAtStart = await Blog.find({});
+    const noteToDelete = notesAtStart[0];
+    await api.delete(`/api/blogs/${noteToDelete.id}`).expect(204);
   });
 
   test("succeeds with status code 404 if id is valid and the blog is not found", async () => {
-    const validNonExistingId = await nonExistingId()
+    const validNonExistingId = await nonExistingId();
     await api.delete(`/api/blogs/${validNonExistingId}`).expect(404);
+  });
+});
+
+describe("update of a blog", () => {
+  test("succeeds with status code 200 and the correct number of likes", async () => {
+    const blogsAtStart = await api.get("/api/blogs");
+    const blogToUpdate = blogsAtStart.body[0];
+    blogToUpdate.likes = 100;
+
+    const updatedBlog = await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(blogToUpdate)
+      .expect(200)
+
+    expect(updatedBlog.body.likes).toBe(100);
   });
 });
 
