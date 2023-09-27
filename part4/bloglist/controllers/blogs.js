@@ -17,13 +17,19 @@ blogsRouter.post("/", async (request, response, next) => {
   });
 
   if (!body.title || !body.url) {
-   return response.status(400).json({
-      error: "title and/or url missing"
-    })
+    return response.status(400).json({
+      error: "title and/or url missing",
+    });
   }
 
   const result = await blog.save();
   response.status(201).json(result);
+});
+
+blogsRouter.delete("/:id", async (request, response) => {
+  const { id } = request.params;
+  const result = await Blog.findByIdAndRemove(id);
+  result ? response.status(204).end() : response.status(404).end();
 });
 
 module.exports = blogsRouter;
