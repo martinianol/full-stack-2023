@@ -18,7 +18,17 @@ const App = () => {
     });
   };
 
+  const getUserFromLocalStorage = () => {
+    const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      noteService.setToken(user.token)
+    }
+  }
+
   useEffect(getNotes, []);
+  useEffect(getUserFromLocalStorage, []);
 
   const addNote = async (event) => {
     event.preventDefault();
@@ -33,7 +43,11 @@ const App = () => {
       setNotes(notes.concat(returnedNote));
       setNewNote("");
     } catch (error) {
+      console.log(error);
       setErrorMessage("There's been an error creating the note");
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
     }
   };
 
@@ -60,25 +74,30 @@ const App = () => {
       });
   };
 
+  const handleLogOut = () => {
+    window.localStorage.removeItem('loggedNoteappUser')
+    setUser(null)
+  }
+
   return (
-    <div>
+    <>
       <h1>Notes</h1>
       <Notification message={errorMessage} />
       {user === null ? (
         <Login handleUser={setUser} handleErrorMessage={setErrorMessage} />
       ) : (
-        <div>
-          <p>{user.name} logged in</p>
+        <>
+          <p>{user.name} logged in</p> <button onClick={handleLogOut}>Log out</button>
           <NoteForm
             addNote={addNote}
             newNote={newNote}
             handleNoteChange={handleNoteChange}
           />
-        </div>
+        </>
       )}
       <Notes notes={notes} toggleImportanceOf={toggleImportanceOf} />
       <Footer />
-    </div>
+    </>
   );
 };
 

@@ -72,6 +72,7 @@ const getTokenFrom = (request) => {
   if (authorization && authorization.startsWith("Bearer ")) {
     return authorization.replace("Bearer ", "");
   }
+  console.log("Estoy por devolver null en getTokenFrom")
   return null;
 };
 
