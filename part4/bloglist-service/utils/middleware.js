@@ -30,8 +30,9 @@ const errorHandler = (error, request, response, next) => {
 const tokenExtractor = (request, response, next) => {
   const authorization = request.get("authorization");
   if (!authorization) {
-    response.status(401).json({ error: "no token submitted" });
+    return response.status(401).json({ error: "no token submitted" });
   }
+
   const token = authorization.startsWith("Bearer ")
     ? authorization.replace("Bearer ", "")
     : null;
