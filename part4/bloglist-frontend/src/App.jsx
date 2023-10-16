@@ -11,9 +11,32 @@ const App = () => {
     if (user) blogService.getAll().then((blogs) => setBlogs(blogs));
   }, [user]);
 
+  const handleLogout = () => {
+    window.localStorage.removeItem("loggedUserAppBlog");
+    setUser(null);
+  };
+
+  const getUserFromLocalStorage = () => {
+    const loggedUserJSON  = window.localStorage.getItem("loggedUserAppBlog");
+    if(loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      blogService.setToken(user.token)
+    }
+  }
+
+  useEffect(getUserFromLocalStorage, []);
+
   return (
     <div>
-      {!user ? <Login handleUser={setUser} /> : <Blogs blogs={blogs} />}
+      {!user ? (
+        <Login handleUser={setUser} />
+      ) : (
+        <>
+          <button onClick={handleLogout}>Logout</button>
+          <Blogs blogs={blogs} />
+        </>
+      )}
     </div>
   );
 };

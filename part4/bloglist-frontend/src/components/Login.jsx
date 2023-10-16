@@ -2,7 +2,7 @@ import { useState } from "react";
 import blogService from "../services/blogs";
 import loginService from "../services/login";
 
-const Login = ({handleUser}) => {
+const Login = ({ handleUser }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -12,12 +12,13 @@ const Login = ({handleUser}) => {
       const user = await loginService.login({ username, password });
       handleUser(user);
       blogService.setToken(user.token);
+      window.localStorage.setItem("loggedUserAppBlog", JSON.stringify(user));
       setUsername("");
       setPassword("");
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit}>
