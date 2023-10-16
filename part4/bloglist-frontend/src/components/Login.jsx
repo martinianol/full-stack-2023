@@ -2,7 +2,7 @@ import { useState } from "react";
 import blogService from "../services/blogs";
 import loginService from "../services/login";
 
-const Login = ({ handleUser }) => {
+const Login = ({ handleUser, handleNotification }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -17,6 +17,10 @@ const Login = ({ handleUser }) => {
       setPassword("");
     } catch (error) {
       console.log(error);
+      handleNotification({ message: "wrong credentials", error: true });
+      setTimeout(() => {
+        handleNotification({ message: null, error: false });
+      }, 5000);
     }
   };
 
