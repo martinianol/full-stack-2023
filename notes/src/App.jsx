@@ -4,12 +4,16 @@ import NoteForm from "./components/Notes/NoteForm";
 import Notification from "./components/Notification";
 import Footer from "./components/Footer";
 import Login from "./components/Login";
+import Togglable from "./components/Togglable";
 import noteService from "./services/notes";
+import loginService from "./services/login";
 
 const App = () => {
   const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState("");
   const [errorMessage, setErrorMessage] = useState(null);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
 
   const getNotes = () => {
@@ -19,13 +23,13 @@ const App = () => {
   };
 
   const getUserFromLocalStorage = () => {
-    const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
+    const loggedUserJSON = window.localStorage.getItem("loggedNoteappUser");
     if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      noteService.setToken(user.token)
+      const user = JSON.parse(loggedUserJSON);
+      setUser(user);
+      noteService.setToken(user.token);
     }
-  }
+  };
 
   useEffect(getNotes, []);
   useEffect(getUserFromLocalStorage, []);
@@ -74,25 +78,56 @@ const App = () => {
       });
   };
 
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    try {
+      const user = await loginService.login({
+        username,
+        password,
+      });
+      window.localStorage.setItem("loggedNoteappUser", JSON.stringify(user));
+      noteService.setToken(user.token);
+      setUser(user);
+      setUsername("");
+      setPassword("");
+    } catch (exception) {
+      setErrorMessage("Wrong credentials");
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
+    }
+  };
+
   const handleLogOut = () => {
-    window.localStorage.removeItem('loggedNoteappUser')
-    setUser(null)
-  }
+    window.localStorage.removeItem("loggedNoteappUser");
+    setUser(null);
+  };
 
   return (
     <>
       <h1>Notes</h1>
       <Notification message={errorMessage} />
       {user === null ? (
-        <Login handleUser={setUser} handleErrorMessage={setErrorMessage} />
+        <Togglable buttonLabel={"Login"}>
+          <Login
+            username={username}
+            password={password}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+            handleSubmit={handleLogin}
+          />
+        </Togglable>
       ) : (
         <>
-          <p>{user.name} logged in</p> <button onClick={handleLogOut}>Log out</button>
-          <NoteForm
-            addNote={addNote}
-            newNote={newNote}
-            handleNoteChange={handleNoteChange}
-          />
+          <p>{user.name} logged in</p>
+          <button onClick={handleLogOut}>Log out</button>
+          <Togglable buttonLabel="new note">
+            <NoteForm
+              addNote={addNote}
+              newNote={newNote}
+              handleNoteChange={handleNoteChange}
+            />
+          </Togglable>
         </>
       )}
       <Notes notes={notes} toggleImportanceOf={toggleImportanceOf} />
