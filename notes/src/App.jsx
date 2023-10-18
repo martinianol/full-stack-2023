@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Notes from "./components/Notes/Notes";
 import NoteForm from "./components/Notes/NoteForm";
 import Notification from "./components/Notification";
@@ -35,6 +35,7 @@ const App = () => {
     try {
       const returnedNote = await noteService.create(noteObject);
       setNotes(notes.concat(returnedNote));
+      noteFormRef.current.toggleVisibility();
     } catch (error) {
       console.log(error);
       setErrorMessage("There's been an error creating the note");
@@ -87,6 +88,8 @@ const App = () => {
     setUser(null);
   };
 
+  const noteFormRef = useRef();
+
   return (
     <>
       <h1>Notes</h1>
@@ -99,7 +102,7 @@ const App = () => {
         <>
           <p>{user.name} logged in</p>
           <button onClick={handleLogOut}>Log out</button>
-          <Togglable buttonLabel="new note">
+          <Togglable buttonLabel="new note" ref={noteFormRef}>
             <NoteForm createNote={addNote} />
           </Togglable>
         </>
