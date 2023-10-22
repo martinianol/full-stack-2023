@@ -38,6 +38,7 @@ const App = () => {
   const handleCreateBlog = async (newBlog) => {
     try {
       const blogAdded = await blogService.createBlog(newBlog);
+      blogAdded.user = user;
       setBlogs((prevState) => prevState.concat([blogAdded]));
       const notification = `a new blog ${blogAdded.title} by ${blogAdded.author} added`;
       setNotification({ message: notification, error: false });
