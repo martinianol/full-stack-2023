@@ -68,6 +68,18 @@ const App = () => {
     }
   };
 
+  const handleRemoveBlog = async (blogId) => {
+    try {
+      await blogService.deleteBlog(blogId);
+      setBlogs(blogs.filter((blog) => blog.id !== blogId));
+    } catch (error) {
+      setNotification({
+        message: "There's been an error removing blog",
+        error: true,
+      });
+    }
+  };
+
   return (
     <div>
       <h2>blogs</h2>
@@ -87,7 +99,7 @@ const App = () => {
           <Togglable buttonLabel="Create New Blog">
             <CreateBlog createBlog={handleCreateBlog} />
           </Togglable>
-          <Blogs blogs={blogs} />
+          <Blogs blogs={blogs} user={user} handleRemove={handleRemoveBlog} />
         </>
       )}
     </div>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import blogsService from "../services/blogs";
-const Blog = ({ blog }) => {
+const Blog = ({ blog, handleRemove, isBlogCreatorUser = true }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -16,6 +16,13 @@ const Blog = ({ blog }) => {
     const newBlog = { ...blog, likes: likes + 1 };
     const updatedBlog = await blogsService.editBlog(newBlog);
     setLikes(updatedBlog.likes);
+  };
+
+  const removeBlog = () => {
+    const remove = window.confirm(
+      `Remove Blog ${blog.title} by ${blog.author}`
+    );
+    if (remove) handleRemove(blog.id);
   };
 
   return (
@@ -34,6 +41,7 @@ const Blog = ({ blog }) => {
               Likes {likes} <button onClick={handleLike}>like</button>
             </div>
             {blog.user && <div>{blog.user?.name}</div>}
+            {isBlogCreatorUser && <button onClick={removeBlog}>remove</button>}
           </>
         )}
       </div>
