@@ -16,7 +16,18 @@ const App = () => {
   });
 
   useEffect(() => {
-    if (user) blogService.getAll().then((blogs) => setBlogs(blogs));
+    if (user) {
+      const getBlogs = async () => {
+        const blogsFromService = await blogService.getAll();
+        const sortedBlogs = blogsFromService.sort((a, b) => {
+          if (a.likes < b.likes) return 1;
+          if (a.likes > b.likes) return -1;
+          return 0;
+        });
+        setBlogs(sortedBlogs);
+      };
+      getBlogs();
+    }
   }, [user]);
 
   const handleLogout = () => {
