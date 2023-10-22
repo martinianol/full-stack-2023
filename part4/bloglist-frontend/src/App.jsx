@@ -4,6 +4,7 @@ import Login from "./components/Login";
 import UserInfo from "./components/UserInfo";
 import CreateBlog from "./components/CreateBlog";
 import Notification from "./components/Notification";
+import Togglable from "./components/Togglable";
 import blogService from "./services/blogs";
 
 const App = () => {
@@ -71,7 +72,9 @@ const App = () => {
       {user && (
         <>
           <UserInfo user={user} handleLogout={handleLogout} />
-          <CreateBlog createBlog={handleCreateBlog} />
+          <Togglable buttonLabel="Create New Blog">
+            <CreateBlog createBlog={handleCreateBlog} />
+          </Togglable>
           <Blogs blogs={blogs} />
         </>
       )}

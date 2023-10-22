@@ -105,9 +105,9 @@ const App = () => {
           <Togglable buttonLabel="new note" ref={noteFormRef}>
             <NoteForm createNote={addNote} />
           </Togglable>
+          <Notes notes={notes} toggleImportanceOf={toggleImportanceOf} />
         </>
       )}
-      <Notes notes={notes} toggleImportanceOf={toggleImportanceOf} />
       <Footer />
     </>
   );
