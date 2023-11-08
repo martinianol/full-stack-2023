@@ -13,7 +13,7 @@ const Blog = ({ blog, handleRemove, isBlogCreatorUser = true }) => {
   const [likes, setLikes] = useState(blog.likes);
 
   const handleLike = async () => {
-    const newBlog = { ...blog, likes: likes + 1 };
+    const newBlog = { ...blog, likes: blog.likes + 1 };
     const updatedBlog = await blogsService.editBlog(newBlog);
     setLikes(updatedBlog.likes);
   };
@@ -40,7 +40,7 @@ const Blog = ({ blog, handleRemove, isBlogCreatorUser = true }) => {
               <a>{blog.url}</a>
             </div>
             <div className="likes">
-              Likes {likes} <button onClick={handleLike}>like</button>
+              Likes {blog.likes} <button id="like-button"onClick={handleLike}>like</button>
             </div>
             {blog.user && <div>{blog.user?.name}</div>}
             {isBlogCreatorUser && <button onClick={removeBlog}>remove</button>}

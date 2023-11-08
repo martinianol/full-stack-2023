@@ -8,7 +8,7 @@ const testBlog = {
   title: "Testing Title",
   author: "Test Mosby",
   url: "www.testing.com",
-  likes: 10
+  likes: 10,
 };
 
 test("renders content correctly", () => {
@@ -23,7 +23,9 @@ test("renders content correctly", () => {
   const elementLikes = container.querySelector(".likes");
 
   expect(elementTitleAndAuthor).toBeDefined();
-  expect(elementTitleAndAuthor).toHaveTextContent(`${testBlog.title} ${testBlog.author}`);
+  expect(elementTitleAndAuthor).toHaveTextContent(
+    `${testBlog.title} ${testBlog.author}`
+  );
   expect(elementUrl).toBe(null);
   expect(elementLikes).toBe(null);
 });
@@ -36,7 +38,7 @@ test("renders url and likes when show detail button is pressed", async () => {
   );
 
   const user = userEvent.setup();
-  const showDetailsButton = screen.getByText("View")
+  const showDetailsButton = screen.getByText("View");
   await user.click(showDetailsButton);
 
   const elementUrl = container.querySelector(".url");
@@ -44,5 +46,20 @@ test("renders url and likes when show detail button is pressed", async () => {
 
   expect(elementUrl).toHaveTextContent(testBlog.url);
   expect(elementLikes).toHaveTextContent(`Likes ${testBlog.likes}`);
+});
 
+test("when pressing n times the like button the event handler is called n times", async() => {
+  const fakeHandleRemove = () => {};
+
+  const { container } = render(
+    <Blog blog={testBlog} handleRemove={fakeHandleRemove} />
+  );
+
+  const user = userEvent.setup();
+  const showDetailsButton = screen.getByText("View");
+  await user.click(showDetailsButton);
+
+  const likeButton = container.querySelector("#like-button")
+
+  await like
 })
