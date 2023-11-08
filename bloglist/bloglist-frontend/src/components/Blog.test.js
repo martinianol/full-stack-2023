@@ -48,18 +48,25 @@ test("renders url and likes when show detail button is pressed", async () => {
   expect(elementLikes).toHaveTextContent(`Likes ${testBlog.likes}`);
 });
 
-test("when pressing n times the like button the event handler is called n times", async() => {
+test("when pressing n times the like button the event handler is called n times", async () => {
   const fakeHandleRemove = () => {};
+  const mockHandleLike = jest.fn();
 
   const { container } = render(
-    <Blog blog={testBlog} handleRemove={fakeHandleRemove} />
+    <Blog
+      blog={testBlog}
+      handleRemove={fakeHandleRemove}
+      onBlogLike={mockHandleLike}
+    />
   );
 
   const user = userEvent.setup();
   const showDetailsButton = screen.getByText("View");
   await user.click(showDetailsButton);
 
-  const likeButton = container.querySelector("#like-button")
+  const likeButton = container.querySelector("#like-button");
 
-  await like
-})
+  await user.click(likeButton);
+  await user.click(likeButton);
+  expect(mockHandleLike.mock.calls).toHaveLength(2)
+});
