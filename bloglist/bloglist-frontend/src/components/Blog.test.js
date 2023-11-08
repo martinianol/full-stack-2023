@@ -68,5 +68,5 @@ test("when pressing n times the like button the event handler is called n times"
 
   await user.click(likeButton);
   await user.click(likeButton);
-  expect(mockHandleLike.mock.calls).toHaveLength(2)
+  expect(mockHandleLike).toHaveBeenCalledTimes(2)
 });
