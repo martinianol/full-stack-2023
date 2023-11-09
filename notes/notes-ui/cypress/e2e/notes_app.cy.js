@@ -57,6 +57,9 @@ describe("Note app", () => {
       cy.get("#login-button").click(); */
 
       cy.login({ username: "test", password: "1234" }); //using a command from support
+      cy.createNewNote({ content: "first note", important: false });
+      cy.createNewNote({ content: "second note", important: false });
+      cy.createNewNote({ content: "third note", important: false });
     });
 
     it("a new note can be created", function () {
@@ -66,11 +69,26 @@ describe("Note app", () => {
       cy.contains("a note created by cypress");
     });
 
-    describe("and a note exists", function () {
+    it("one of those can be made important", function () {
+      // cy.contains("second note").contains("make important").click();
+      // cy.contains("second note").contains("make not important");
+
+      // cy.contains("second note").parent().find("button").click();
+      // cy.contains("second note")
+      //   .parent()
+      //   .find("button")
+      //   .should("contain", "make not important");
+
+      cy.contains("second note").parent().find("button").as("theButton");
+      cy.get("@theButton").click();
+      cy.get("@theButton").should("contain", "make not important");
+    });
+
+    /* describe("and a note exists", function () {
       beforeEach(function () {
-        /* cy.contains("new note").click();
-        cy.get("#note-input").type("another note cypress");
-        cy.contains("save").click(); */
+        // cy.contains("new note").click();
+        // cy.get("#note-input").type("another note cypress");
+        // cy.contains("save").click();
         cy.createNewNote({ content: "another note cypress", important: true });
       });
 
@@ -81,6 +99,6 @@ describe("Note app", () => {
 
         cy.contains("another note cypress").contains("make important");
       });
-    });
+    }); */
   });
 });
