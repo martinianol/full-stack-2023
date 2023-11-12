@@ -99,7 +99,7 @@ const App = () => {
           <Togglable buttonLabel="Create New Blog">
             <CreateBlog createBlog={handleCreateBlog} />
           </Togglable>
-          <Blogs blogs={blogs} user={user} handleRemove={handleRemoveBlog} />
+          <Blogs id="blogs-list" blogs={blogs} user={user} handleRemove={handleRemoveBlog} />
         </>
       )}
     </div>

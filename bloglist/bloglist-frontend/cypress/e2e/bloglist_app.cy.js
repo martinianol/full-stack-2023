@@ -40,8 +40,25 @@ describe("Bloglist App", () => {
         .should("contain", "wrong credentials")
         .and("have.css", "color", "rgb(255, 0, 0)")
         .and("have.css", "border-style", "solid");
+    });
+  });
 
-      //cy.contains("wrong credentials");
+  describe("When logged in", function () {
+    beforeEach(function () {
+      cy.get("#username").type("tester");
+      cy.get("#password").type("1234");
+      cy.get("#login-button").click();
+    });
+
+    it("A blog can be created", function () {
+      cy.contains("Create New Blog").click();
+
+      cy.get("#input-title").type("This is a test blog");
+      cy.get("#input-author").type("Test Author");
+      cy.get("#input-url").type("www.test.com");
+      cy.get("#create-blog-button").click();
+
+      cy.contains("This is a test blog Test Author");
     });
   });
 });
