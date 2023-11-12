@@ -1,16 +1,5 @@
 const Notification = ({ message, isError }) => {
-  return (
-    <div
-      style={{
-        background: "lightgrey",
-        color: isError ? "red" : "green",
-        border: `3px solid ${isError ? "red" : "green"}`,
-        padding: "8px",
-      }}
-    >
-      {message}
-    </div>
-  );
+  return <div className={`notification ${isError && "error"}`}>{message}</div>;
 };
 
 export default Notification;
